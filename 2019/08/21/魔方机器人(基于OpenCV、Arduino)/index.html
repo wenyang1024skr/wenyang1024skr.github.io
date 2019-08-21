@@ -15,14 +15,14 @@
 <meta property="og:site_name" content="Yang Blog">
 <meta property="og:description" content="魔方机器人(基于OpenCV、Arduino) 简介顾名思义，魔方机器人就是可以自动还原任意打乱魔方的机器人，从自动识别颜色到通过还原算法进行魔方的还原。博主做的是六轴的魔方机器人，魔方六个面都可以独立转动，提高魔方的还原速度。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20190716230212408.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODcyNjQz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20190718125814324.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODcyNjQz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20190721223134242.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODcyNjQz,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2019-08-21T10:54:02.989Z">
+<meta property="og:image" content="http://yangcode.cn/img/6.jpg">
+<meta property="og:image" content="http://yangcode.cn/img/4.png">
+<meta property="og:image" content="http://yangcode.cn/img/driver.png">
+<meta property="og:updated_time" content="2019-08-21T11:09:44.377Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Yang Blog">
 <meta name="twitter:description" content="魔方机器人(基于OpenCV、Arduino) 简介顾名思义，魔方机器人就是可以自动还原任意打乱魔方的机器人，从自动识别颜色到通过还原算法进行魔方的还原。博主做的是六轴的魔方机器人，魔方六个面都可以独立转动，提高魔方的还原速度。">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190716230212408.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODcyNjQz,size_16,color_FFFFFF,t_70">
+<meta name="twitter:image" content="http://yangcode.cn/img/6.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Yang Blog" type="application/atom+xml">
   
@@ -177,7 +177,7 @@
 <a id="more"></a>
 
 <ul>
-<li><h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><pre><code>在这里贴一张图方便大家理解整个流程：</code></pre><img src="https://img-blog.csdnimg.cn/20190716230212408.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODcyNjQz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>其实可以看到整个机器人的执行流程还是比较简单的，就分为两个部分。第一个部分就是上位机，第二个部分则是下位机，接下来具体介绍。（为了比较直观的了解这个机器人，我先将成品贴出来）<br><img src="https://img-blog.csdnimg.cn/20190718125814324.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODcyNjQz,size_16,color_FFFFFF,t_70" alt="成品"><br><img src="https://img-blog.csdnimg.cn/20190721223134242.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODcyNjQz,size_16,color_FFFFFF,t_70" alt="Arduino，电机驱动以及电源"><br>我们先说一下弄这个东西的整体思路，之后再做具体说明。<br>首先，需要对魔方机器人有一个大概的了解，你是想让他单纯的执行转动魔方的动作还是想让他从一个任意打乱的魔方能够自动还原，如果是前者的话就非常好办了，你只需要弄个单片机，一些电机，总之能让电机带动魔方转动就好了，如果是后者的话，那就稍微会有点复杂了。玩过三阶魔方的同学应该都知道魔方是有公式的，比如层先、CFOP、桥式等等，那要让机器人去记这些公式可能有点不太现实，也不是说不可能，就是有点复杂，就拿CFOP来说吧，光是FOP就有119条公式，但是对于机器人来说可不就这么简单了，如果情况与公式不是绝对对应的话那么计算机还需要判断额外的情况，并且在做C的时候也会有困难，并且还需要摄像头实时反映图像，所以在这里我们就需要一种能够还原魔方的算法。通过算法得出魔方的还原步骤，只要能那大还原步骤，那么，剩下的都好办了。之后通过颜色识别得到一个被打乱的魔方的颜色序列经过算法得出还原序列，再将此序列发送给下位机执行就可以了。</li>
+<li><h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><pre><code>在这里贴一张图方便大家理解整个流程：</code></pre><img src="http://yangcode.cn/img/6.jpg" alt="流程图"><br>其实可以看到整个机器人的执行流程还是比较简单的，就分为两个部分。第一个部分就是上位机，第二个部分则是下位机，接下来具体介绍。（为了比较直观的了解这个机器人，我先将成品贴出来）<br><img src="http://yangcode.cn/img/4.png" alt="成品"><br><img src="http://yangcode.cn/img/driver.png" alt="Arduino，电机驱动以及电源"><br>我们先说一下弄这个东西的整体思路，之后再做具体说明。<br>首先，需要对魔方机器人有一个大概的了解，你是想让他单纯的执行转动魔方的动作还是想让他从一个任意打乱的魔方能够自动还原，如果是前者的话就非常好办了，你只需要弄个单片机，一些电机，总之能让电机带动魔方转动就好了，如果是后者的话，那就稍微会有点复杂了。玩过三阶魔方的同学应该都知道魔方是有公式的，比如层先、CFOP、桥式等等，那要让机器人去记这些公式可能有点不太现实，也不是说不可能，就是有点复杂，就拿CFOP来说吧，光是FOP就有119条公式，但是对于机器人来说可不就这么简单了，如果情况与公式不是绝对对应的话那么计算机还需要判断额外的情况，并且在做C的时候也会有困难，并且还需要摄像头实时反映图像，所以在这里我们就需要一种能够还原魔方的算法。通过算法得出魔方的还原步骤，只要能那大还原步骤，那么，剩下的都好办了。之后通过颜色识别得到一个被打乱的魔方的颜色序列经过算法得出还原序列，再将此序列发送给下位机执行就可以了。</li>
 </ul>
 <p>一.还原算法<br>二.魔方打乱后的颜色识别<br>三.下位机——Arduino<br>四.机器人设计思路<br>五.整合</p>
 
@@ -437,14 +437,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JPA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -458,6 +450,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">来必力</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">JPA</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
             <div class="clearfix"></div>
